@@ -1,4 +1,4 @@
-importScripts("/phaser-test-game/precache-manifest.7bd8aef4e053f3d0bcbe2320a580d723.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("precache-manifest.b067821c553103ee3f7ccf239e8707a5.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 /**
  * You should only modify this, if you know what you are doing.
