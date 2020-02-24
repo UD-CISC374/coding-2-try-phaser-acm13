@@ -4,7 +4,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/coding-2-try-phaser-acm13/devassets/background.png"
   },
   {
-    "revision": "deec73c79c02e771f5fe18be9c63cf89",
+    "revision": "e7087d5d91321d575b038366ef9f2407",
     "url": "/coding-2-try-phaser-acm13/devassets/citations.md"
   },
   {
@@ -12,7 +12,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/coding-2-try-phaser-acm13/devassets/font/font.png"
   },
   {
-    "revision": "38c02ad8ccaf9579150bb10d283e2b0c",
+    "revision": "872f41e77eae3bfc4fba291b0145b12a",
     "url": "/coding-2-try-phaser-acm13/devassets/font/font.xml"
   },
   {
@@ -56,23 +56,23 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/coding-2-try-phaser-acm13/devassets/spritesheets/ship3.png"
   },
   {
-    "revision": "cb26bab42d3765ce4a95",
-    "url": "/coding-2-try-phaser-acm13/devgen.main.732178b13f1c87ca4a3f.bundle.js"
+    "revision": "3186fd61cf5246f20e4f",
+    "url": "/coding-2-try-phaser-acm13/devgen.main.a219d84dc1e7fe78e131.bundle.js"
   },
   {
     "revision": "201b65bee9df6270f739",
     "url": "/coding-2-try-phaser-acm13/devgen.vendors.a047ee0740c7d21714d9.bundle.js"
   },
   {
-    "revision": "4178dba12d06885adbd4bae5f930b43f",
+    "revision": "95c0ff3dfb08a37c68fb48f46ea29acb",
     "url": "/coding-2-try-phaser-acm13/devindex.html"
   },
   {
-    "revision": "fc8cefcfb102b35601f09d51ee2512ef",
+    "revision": "b4321e6f6a88a978d4964c0d1b432b03",
     "url": "/coding-2-try-phaser-acm13/devmanifest.json"
   },
   {
-    "revision": "701445d8817f73e3da17e450b69faa36",
+    "revision": "a8029749c7edd38204cf67287cb14139",
     "url": "/coding-2-try-phaser-acm13/devsw.js"
   }
 ]);
