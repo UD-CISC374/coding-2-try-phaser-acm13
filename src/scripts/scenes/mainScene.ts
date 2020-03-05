@@ -1,5 +1,7 @@
+//This file is where the bulk of the game functionality occurs
+
 export default class MainScene extends Phaser.Scene {
-  //set all of the properties
+  //Set all of the properties
   private background;
   private ball;
   private broom;
@@ -15,11 +17,11 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    //add the background
+    //Add the background as a tileSprite that will fill the whole screen
     this.background = this.add.tileSprite(0, 0, this.scale.width, this.scale.height, "background");
     this.background.setOrigin(0,0);
 
-    //set up the score box
+    //Set up the score display as a black box with the word SCORE written
     let graphics = this.add.graphics();
     graphics.fillStyle(0x000000, 1);
     graphics.beginPath();
@@ -33,142 +35,204 @@ export default class MainScene extends Phaser.Scene {
     this.score = 0;
     this.scoreLabel = this.add.bitmapText(10, 5, "pixelFont", "SCORE ", 16);
 
-    //create the ball, give it speed and bounce
+    //Create the ball and place it on the screen
     this.ball = this.physics.add.image(0,0,"ball");
+    //Give the ball a horizontal and vertical speed
     this.ball.setVelocity(40,40);
+    //Make it so that the ball must stay within the confines of the screen
     this.ball.setCollideWorldBounds(true);
+    //Make it so that the ball bounces when it hits the edges of the screen
     this.ball.setBounce(1);
 
-    //create the broom
+    //Create the broom and place it on the screen
     this.broom = this.physics.add.image(this.scale.width/2 - 50, this.scale.height/2 - 100, "broom");
+    //Make it so that the broom must stay within the confines of the screen
     this.broom.setCollideWorldBounds(true);
 
-    //get user input through the keys
+    //Get user input through the keys
     this.cursorKeys = this.input.keyboard.createCursorKeys();
     
-    //create the opponent
+    //Create the opponent and place it on the screen
     this.opponent = this.physics.add.image(this.scale.width/2, this.scale.height/2, "opponent");
 
-    //set up the collisions for broom+ball and opponent+ball
+    //Set up the broom and ball collision which will trigger a win
     this.physics.add.overlap(this.broom, this.ball, this.win, undefined, this);
+    //Set up the opponent and ball collision which will trigger a loss
     this.physics.add.overlap(this.opponent, this.ball, this.lose, undefined, this);
   }
 
-  //make the opponent move
-  moveOpponent(opponent, speed){
+  moveOpponent(opponent, speed: integer){
+    /*
+    Moves the opponent image down the screen.
+
+    Args:
+      opponent: the opponent to be moved
+      speed: the amount by which to move the opponent
+    */
     opponent.y += speed;
+    //If the opponent has reached the bottom of the screen, call the resetOpponentPos function
     if (opponent.y > this.scale.height){
       this.resetOpponentPos(opponent);
     }
   }
 
-  //put the opponent back at the top of the screen when it reaches the bottom
   resetOpponentPos(opponent){
+    /*
+    Puts the opponent image back at the top of the screen when it reaches the bottom.
+
+    Args:
+      opponent: the opponent image to be moved
+    */
     opponent.y = 0;
-    let randomX = Phaser.Math.Between(0, this.scale.width);
+    //Pick a random x coordinate for the opponent to move to
+    let randomX:integer = Phaser.Math.Between(0, this.scale.width);
     opponent.x = randomX;
   }
 
-  //add 0s to the front of the score
-  zeroPad(number, size){
-    let stringNumber = String(number);
+  zeroPad(number: integer, size: integer){
+    /*
+    Add 0s to make a number the desired size
+
+    Args:
+      number: the number that needs to be changed
+      size: the desired number of digits
+    */
+    let stringNumber:string = String(number);
     while(stringNumber.length < (size || 2)){
       stringNumber = "0" + stringNumber;
     }
     return stringNumber;
   }
   
-  //allow keys to move the broom
   moveBroom(){
+    /*
+    Moves the broom image based on the key that is pressed.
+    */
+    //Set horizontal velocity to be negative when left key is pressed
     if(this.cursorKeys.left.isDown){
-      this.broom.setVelocityX(-75);
+      this.broom.setVelocityX(-65);
     }
+    //Set horizontal velocity to be positive when right key is pressed
     else if(this.cursorKeys.right.isDown){
-      this.broom.setVelocityX(75);
+      this.broom.setVelocityX(65);
     }
+    //Have no horizontal velocity if left and right keys aren't pressed
     else{
       this.broom.setVelocityX(0);
     }
 
+    //Set the vertical velocity to be negative when up key is pressed
     if(this.cursorKeys.up.isDown){
-      this.broom.setVelocityY(-75);
+      this.broom.setVelocityY(-65);
     }
+    //Set the vertical velocity to be positive when down key is pressed
     else if(this.cursorKeys.down.isDown){
-      this.broom.setVelocityY(75);
+      this.broom.setVelocityY(65);
     }
+    //Have no vertical velocity if up and down keys aren't pressed
     else{
       this.broom.setVelocityY(0);
     }
   }
 
-  //hide the ball, update score, show coin, show new ball
   win(broom, ball){
-    this.ball.disableBody(true,true);
+    /*
+    Hides the ball, updates the score, shows the coin image, and shows a new ball.
+
+    Args:
+      broom: the broom that hit the ball
+      ball: the ball that was hit
+    */
+    this.ball.disableBody(true,true); //Hide the current ball
+    //Give a brief break before the new ball is created
     this.time.addEvent({
-      delay: 100,
+      delay: 300,
       callback: this.newBall,
       callbackScope: this,
       loop: false
     });
-    this.score += 15;
-    let scoreFormated = this.zeroPad(this.score, 6);
-    this.scoreLabel.text = "SCORE " + scoreFormated;
-    this.winImage = this.physics.add.image(this.scale.width/2, this.scale.height/2, "win");
 
+    //Update the score to reflect the win
+    this.score += 15; 
+    let scoreFormated:string = this.zeroPad(this.score, 6);
+    this.scoreLabel.text = "SCORE " + scoreFormated;
+
+    //Show the coin image to signify a win
+    this.winImage = this.physics.add.image(this.scale.width/2, this.scale.height/2, "win");
+    //Hide the coin image after a brief time
     this.time.addEvent({
-      delay: 100,
+      delay: 300,
       callback: this.hideWin,
       callbackScope: this,
       loop: false
     });
   }
 
-  //hide the coin after a brief time
   hideWin(){
+    /*
+    Hides the coin image.
+    */
     this.winImage.disableBody(true,true);
   }
 
-  //hide the ball, update score, show X, show new ball
   lose(opponent, ball){
-    this.ball.disableBody(true,true);
+    /*
+    Hides the ball, updates the score, shows the red X, and shows a new ball
+
+    Args:
+      opponent: the opponent that got the ball
+      ball: the ball that was hit
+    */
+    this.ball.disableBody(true,true); //Hide the current ball
+    //Give a brief break before the new ball is created
     this.time.addEvent({
-      delay: 100,
+      delay: 300,
       callback: this.newBall,
       callbackScope: this,
       loop: false
     });
-    this.score -= 15;
-    let scoreFormated = this.zeroPad(this.score, 6);
-    this.scoreLabel.text = "SCORE " + scoreFormated;
-    this.loseImage = this.physics.add.image(this.scale.width/2, this.scale.height/2, "lose");
 
+    //Update the score to reflect the loss
+    this.score -= 15;
+    let scoreFormated:string = this.zeroPad(this.score, 6);
+    this.scoreLabel.text = "SCORE " + scoreFormated;
+
+    //Show the red X to signify a loss
+    this.loseImage = this.physics.add.image(this.scale.width/2, this.scale.height/2, "lose");
+    //Remove the red X after a brief time
     this.time.addEvent({
-      delay: 100,
+      delay: 300,
       callback: this.hideLose,
       callbackScope: this,
       loop: false
     });
   }
 
-  //hide the X after a brief time
   hideLose(){
+    /*
+    Hides the red X
+    */
     this.loseImage.disableBody(true,true);
   }
 
-  //create a new ball at a random location
   newBall(){
-    let x = Phaser.Math.Between(0,this.scale.width);
-    let y = Phaser.Math.Between(0,this.scale.height);
+    /*
+    Creates a new ball at a random location.
+    */
+    let x:integer = Phaser.Math.Between(0,this.scale.width);
+    let y:integer = Phaser.Math.Between(0,this.scale.height);
     this.ball.enableBody(true,x,y,true,true);
     this.ball.setVelocity(40,40);
   }
 
-  //move the background, opponent, and broom
   update() {
-    this.background.tilePositionY -= 0.5;
+    /*
+    Moves the background, opponent, and broom.
+    */
+    this.background.tilePositionY -= 0.5; //Move the background continuously
 
-    this.moveOpponent(this.opponent, 2);
+    this.moveOpponent(this.opponent, 2); //Move the opponent down continuously
 
-    this.moveBroom();
+    this.moveBroom(); //Move the broom based on key presses
   }
 }

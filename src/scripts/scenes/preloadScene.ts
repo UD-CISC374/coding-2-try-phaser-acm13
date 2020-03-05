@@ -1,10 +1,11 @@
+//This file is used to preload the images and start the main scene
 export default class PreloadScene extends Phaser.Scene {
   constructor() {
     super({ key: 'PreloadScene' });
   }
 
   preload() {
-    //load all of the images
+    //Load all of the images
     this.load.image("background", "assets/background.jpg");
     this.load.image("broom", "assets/broom.png");
     this.load.image("ball", "assets/ball.png");
